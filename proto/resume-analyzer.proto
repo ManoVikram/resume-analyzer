@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package resumeanalyzer;
+
+option go_package = "github.com/ManoVikram/resume-analyzer/backend/api/proto/resumeanalyzer;resumeanalyzer";
+
+//======================
+// Service
+//======================
+
+service ResumeAnalyzer {
+    rpc AnalyzeResume(AnalyzeResumeRequest) returns AnalyzeResumeResponse;
+}
+
+//======================
+// Request
+//======================
+
+message AnalyzeResumeRequest {
+    bytes file_bytes = 1;
+    string file_name = 2;
+    string jd_text = 3;
+}
+
+//======================
+// Response
+//======================
+
+message AnalyzeResumeResponse {
+    bool success = 1;
+    string error = 2;                       // Will be populated only when success is false
+    OverallScore overall_score = 3;
+    ScoreBreakdown score_breakdown = 4;
+    repeated string recruiter_risks = 5;    // 3-5 bullet points
+    repeated string strengths = 6;          // 3-5 bullet points 
+    repeated Fix top_fixes = 7;             // Top 5 fix suggestions (ranked)
+}
+
+//======================
+// Shared Messages
+//======================
+
+message OverallScore {
+    int32 score = 1;                // 0-100
+    string interpretation = 2;      // Ex: "Strong potential to get shortlisted"
+}
+
+message ScoreBreakdown {
+    int32 impact_metrics = 1;       // 30% weight
+    int32 jd_alignment = 2;         // 30% weight
+    int32 ownership_signals = 3;    // 20% weight
+    int32 remote_readiness = 4;     // 20% weight
+}
+
+message Fix {
+    string problem = 1;
+    string why_it_matters = 2;
+    string improvement = 3;
+}
