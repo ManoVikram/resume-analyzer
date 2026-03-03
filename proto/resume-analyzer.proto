@@ -9,7 +9,7 @@ option go_package = "github.com/ManoVikram/resume-analyzer/backend/api/proto/res
 //======================
 
 service ResumeAnalyzer {
-    rpc AnalyzeResume(AnalyzeResumeRequest) returns AnalyzeResumeResponse;
+    rpc AnalyzeResume(AnalyzeResumeRequest) returns (AnalyzeResumeResponse);
 }
 
 //======================
