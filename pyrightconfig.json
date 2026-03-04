@@ -1,0 +1,7 @@
+{
+  "pythonPath": "/Users/manovikram/Developer/Projects/resume-analyzer/backend/services/.venv/bin/python",
+  "pythonVersion": "3.14",
+  "pythonPlatform": "Darwin",
+  "include": ["backend/services"],
+  "extraPaths": ["backend/services", "."]
+}
