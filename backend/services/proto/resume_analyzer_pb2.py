@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15resume-analyzer.proto\x12\x0eresumeanalyzer\"N\n\x14\x41nalyzeResumeRequest\x12\x12\n\nfile_bytes\x18\x01 \x01(\x0c\x12\x11\n\tfile_name\x18\x02 \x01(\t\x12\x0f\n\x07jd_text\x18\x03 \x01(\t\"\xf9\x01\n\x15\x41nalyzeResumeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12\x33\n\roverall_score\x18\x03 \x01(\x0b\x32\x1c.resumeanalyzer.OverallScore\x12\x37\n\x0fscore_breakdown\x18\x04 \x01(\x0b\x32\x1e.resumeanalyzer.ScoreBreakdown\x12\x17\n\x0frecruiter_risks\x18\x05 \x03(\t\x12\x11\n\tstrengths\x18\x06 \x03(\t\x12&\n\ttop_fixes\x18\x07 \x03(\x0b\x32\x13.resumeanalyzer.Fix\"5\n\x0cOverallScore\x12\r\n\x05score\x18\x01 \x01(\x05\x12\x16\n\x0einterpretation\x18\x02 \x01(\t\"s\n\x0eScoreBreakdown\x12\x16\n\x0eimpact_metrics\x18\x01 \x01(\x05\x12\x14\n\x0cjd_alignment\x18\x02 \x01(\x05\x12\x19\n\x11ownership_signals\x18\x03 \x01(\x05\x12\x18\n\x10remote_readiness\x18\x04 \x01(\x05\"C\n\x03\x46ix\x12\x0f\n\x07problem\x18\x01 \x01(\t\x12\x16\n\x0ewhy_it_matters\x18\x02 \x01(\t\x12\x13\n\x0bimprovement\x18\x03 \x01(\t2n\n\x0eResumeAnalyzer\x12\\\n\rAnalyzeResume\x12$.resumeanalyzer.AnalyzeResumeRequest\x1a%.resumeanalyzer.AnalyzeResumeResponseBWZUgithub.com/ManoVikram/resume-analyzer/backend/api/proto/resumeanalyzer;resumeanalyzerb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x15resume-analyzer.proto\x12\x0eresumeanalyzer\"M\n\x14\x41nalyzeResumeRequest\x12\x12\n\nfile_bytes\x18\x01 \x01(\x0c\x12\x10\n\x08\x66ilename\x18\x02 \x01(\t\x12\x0f\n\x07jd_text\x18\x03 \x01(\t\"\xf9\x01\n\x15\x41nalyzeResumeResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\r\n\x05\x65rror\x18\x02 \x01(\t\x12\x33\n\roverall_score\x18\x03 \x01(\x0b\x32\x1c.resumeanalyzer.OverallScore\x12\x37\n\x0fscore_breakdown\x18\x04 \x01(\x0b\x32\x1e.resumeanalyzer.ScoreBreakdown\x12\x17\n\x0frecruiter_risks\x18\x05 \x03(\t\x12\x11\n\tstrengths\x18\x06 \x03(\t\x12&\n\ttop_fixes\x18\x07 \x03(\x0b\x32\x13.resumeanalyzer.Fix\"5\n\x0cOverallScore\x12\r\n\x05score\x18\x01 \x01(\x05\x12\x16\n\x0einterpretation\x18\x02 \x01(\t\"s\n\x0eScoreBreakdown\x12\x16\n\x0eimpact_metrics\x18\x01 \x01(\x05\x12\x14\n\x0cjd_alignment\x18\x02 \x01(\x05\x12\x19\n\x11ownership_signals\x18\x03 \x01(\x05\x12\x18\n\x10remote_readiness\x18\x04 \x01(\x05\"C\n\x03\x46ix\x12\x0f\n\x07problem\x18\x01 \x01(\t\x12\x16\n\x0ewhy_it_matters\x18\x02 \x01(\t\x12\x13\n\x0bimprovement\x18\x03 \x01(\t2n\n\x0eResumeAnalyzer\x12\\\n\rAnalyzeResume\x12$.resumeanalyzer.AnalyzeResumeRequest\x1a%.resumeanalyzer.AnalyzeResumeResponseBWZUgithub.com/ManoVikram/resume-analyzer/backend/api/proto/resumeanalyzer;resumeanalyzerb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,15 +33,15 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'ZUgithub.com/ManoVikram/resume-analyzer/backend/api/proto/resumeanalyzer;resumeanalyzer'
   _globals['_ANALYZERESUMEREQUEST']._serialized_start=41
-  _globals['_ANALYZERESUMEREQUEST']._serialized_end=119
-  _globals['_ANALYZERESUMERESPONSE']._serialized_start=122
-  _globals['_ANALYZERESUMERESPONSE']._serialized_end=371
-  _globals['_OVERALLSCORE']._serialized_start=373
-  _globals['_OVERALLSCORE']._serialized_end=426
-  _globals['_SCOREBREAKDOWN']._serialized_start=428
-  _globals['_SCOREBREAKDOWN']._serialized_end=543
-  _globals['_FIX']._serialized_start=545
-  _globals['_FIX']._serialized_end=612
-  _globals['_RESUMEANALYZER']._serialized_start=614
-  _globals['_RESUMEANALYZER']._serialized_end=724
+  _globals['_ANALYZERESUMEREQUEST']._serialized_end=118
+  _globals['_ANALYZERESUMERESPONSE']._serialized_start=121
+  _globals['_ANALYZERESUMERESPONSE']._serialized_end=370
+  _globals['_OVERALLSCORE']._serialized_start=372
+  _globals['_OVERALLSCORE']._serialized_end=425
+  _globals['_SCOREBREAKDOWN']._serialized_start=427
+  _globals['_SCOREBREAKDOWN']._serialized_end=542
+  _globals['_FIX']._serialized_start=544
+  _globals['_FIX']._serialized_end=611
+  _globals['_RESUMEANALYZER']._serialized_start=613
+  _globals['_RESUMEANALYZER']._serialized_end=723
 # @@protoc_insertion_point(module_scope)

@@ -18,7 +18,7 @@ service ResumeAnalyzer {
 
 message AnalyzeResumeRequest {
     bytes file_bytes = 1;
-    string file_name = 2;
+    string filename = 2;
     string jd_text = 3;
 }
 
