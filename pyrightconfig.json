@@ -1,5 +1,6 @@
 {
-  "pythonPath": "/Users/manovikram/Developer/Projects/resume-analyzer/backend/services/.venv/bin/python",
+  "venvPath": "/Users/manovikram/Developer/Projects/resume-analyzer/backend/services",
+  "venv": ".venv",
   "pythonVersion": "3.14",
   "pythonPlatform": "Darwin",
   "include": ["backend/services"],
