@@ -3,6 +3,7 @@ python-dotenv
 grpcio
 grpcio-tools
 protobuf
+mypy-protobuf
 pymupdf
 python-docx
 pydantic
