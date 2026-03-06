@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v6.33.4
-// source: resume-analyzer.proto
+// source: resume_analyzer.proto
 
 package resumeanalyzer
 
@@ -117,5 +117,5 @@ var ResumeAnalyzer_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "resume-analyzer.proto",
+	Metadata: "resume_analyzer.proto",
 }

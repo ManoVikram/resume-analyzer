@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.4
-// source: resume-analyzer.proto
+// source: resume_analyzer.proto
 
 package resumeanalyzer
 
@@ -357,7 +357,7 @@ var File_resume_analyzer_proto protoreflect.FileDescriptor
 
 const file_resume_analyzer_proto_rawDesc = "" +
 	"\n" +
-	"\x15resume-analyzer.proto\x12\x0eresumeanalyzer\"j\n" +
+	"\x15resume_analyzer.proto\x12\x0eresumeanalyzer\"j\n" +
 	"\x14AnalyzeResumeRequest\x12\x1d\n" +
 	"\n" +
 	"file_bytes\x18\x01 \x01(\fR\tfileBytes\x12\x1a\n" +
