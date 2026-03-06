@@ -43,19 +43,19 @@ go get google.golang.org/protobuf
 Run the below command from the /backend folder to generate the Python gRPC stub files.
 
 ```bash
-python3 -m grpc_tools.protoc -I../proto --python_out=./services/proto --grpc_python_out=./services/proto ../proto/resume-analyzer.proto
+python3 -m grpc_tools.protoc -I../proto --python_out=./services/proto --grpc_python_out=./services/proto ../proto/resume_analyzer.proto
 ```
 
 Run the below command from the /backend folder to generate the mypy static type hint gRPC stub files (keeps Pylance from complaining).
 
 ```bash
-python3 -m grpc_tools.protoc -I../proto --python_out=./services/proto --grpc_python_out=./services/proto --mypy_out=./services/proto ../proto/resume-analyzer.proto
+python3 -m grpc_tools.protoc -I../proto --python_out=./services/proto --grpc_python_out=./services/proto --mypy_out=./services/proto ../proto/resume_analyzer.proto
 ```
 
 Run the below command from the /backend folder to generate the Go gRPC files.
 
 ```bash
-protoc --proto_path=../proto --go_out=./api/proto --go_opt=paths=source_relative --go-grpc_out=./api/proto --go-grpc_opt=paths=source_relative ../proto/resume-analyzer.proto
+protoc --proto_path=../proto --go_out=./api/proto --go_opt=paths=source_relative --go-grpc_out=./api/proto --go-grpc_opt=paths=source_relative ../proto/resume_analyzer.proto
 ```
 
 ## Run the gRPC & Gin servers
