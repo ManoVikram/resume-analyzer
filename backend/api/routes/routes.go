@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(server *gin.Engine, grpcClinet pb.ResumeAnalyzerClient) {
+func RegisterRoutes(server *gin.Engine, grpcClient pb.ResumeAnalyzerClient) {
 	// GET request for API health check
 	server.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
