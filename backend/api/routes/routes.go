@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/ManoVikram/resume-analyzer/backend/api/handlers"
 	pb "github.com/ManoVikram/resume-analyzer/backend/api/proto"
 	"github.com/gin-gonic/gin"
 )
@@ -16,4 +17,11 @@ func RegisterRoutes(server *gin.Engine, grpcClient pb.ResumeAnalyzerClient) {
 			"message": "Resume Analyzer API is healthy and running",
 		})
 	})
+
+	// API v1 routes
+	v1 := server.Group("/api/v1")
+	{
+		// POST request to analyze the resume and job description
+		v1.POST("/analyze", handlers.NewResumeAnalysisHandler(grpcClient).Analyze)
+	}
 }
