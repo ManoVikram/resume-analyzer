@@ -8,7 +8,6 @@ import grpc
 from pydantic import BaseModel, Field
 
 from proto import resume_analyzer_pb2, resume_analyzer_pb2_grpc
-from anthropic.types import TextBlock
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -58,7 +57,7 @@ class ResumeAnalyzerServicer(resume_analyzer_pb2_grpc.ResumeAnalyzerServicer):
         if filename_lower.endswith(".pdf"):
             return self._extract_from_pdf(file_bytes)
         elif filename_lower.endswith(".docx"):
-            return self.extract_from_docx(file_bytes)
+            return self._extract_from_docx(file_bytes)
         elif filename_lower.endswith(".doc"):
             raise ValueError("Unsupported file format: .doc is not supported. Please convert it to .docx or .pdf")
         else:
@@ -68,13 +67,21 @@ class ResumeAnalyzerServicer(resume_analyzer_pb2_grpc.ResumeAnalyzerServicer):
         doc = fitz.open(stream=file_bytes, filetype="pdf")
         return "\n".join(str(page.get_text("text")) for page in doc)
 
-    def extract_from_docx(self, file_bytes: bytes) -> str:
+    def _extract_from_docx(self, file_bytes: bytes) -> str:
         doc = docx.Document(docx=BytesIO(file_bytes))
         return "\n".join(para.text for para in doc.paragraphs if para.text.strip())
     
     def _build_prompt(self, resume_text: str, jd_text: str):
         return f"""Analyze this developer resume against the job description below.
                 The candidate has 0-2 years of experience and is targeting US remote startup roles.
+
+                Respond ONLY with a JSON object matching this EXACT schema.
+
+                Return ONLY raw JSON.
+                Do NOT wrap the JSON in markdown.
+                Do NOT include ```json or ``` anywhere.
+                Do NOT include explanations.
+                The response must start with '{' and end with '}'.
 
                 Respond ONLY with a JSON object matching this EXACT schema:
                 {{
@@ -122,24 +129,26 @@ class ResumeAnalyzerServicer(resume_analyzer_pb2_grpc.ResumeAnalyzerServicer):
         """
         prompt = self._build_prompt(resume_text=resume_text, jd_text=jd_text)
 
-        response = self.client.messages.create(
+        response = self.client.messages.parse(
             model="claude-haiku-4-5",
             max_tokens=2048,
             temperature=0.2,
             system=(
                 "You are an expert technical recruiter and resume coach specializing in evaluating "
                 "developer resumes (0-2 years experience) for US remote startup roles.\n\n"
-                "You must respond ONLY with a valid JSON object. No preamble, no explanation, no markdown. "
+                "You must respond ONLY with a valid JSON object. NO PREAMBLE, NO EXPLANATION, NO MARKDOWN. "
                 "Just raw JSON that matches the exact schema provided."
             ),
             messages=[
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            output_format=ResumeAnalysis
         )
 
-        analysis_raw = next(block.text for block in response.content if isinstance(block, TextBlock))
+        if response.parsed_output is None:
+            raise ValueError(f"Failed to parse Claude response to ResumeAnalysis model.")
 
-        return ResumeAnalysis.model_validate_json(json_data=analysis_raw)
+        return response.parsed_output
 
     def AnalyzeResume(self, request, context):
         """
