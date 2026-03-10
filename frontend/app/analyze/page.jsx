@@ -1,7 +1,9 @@
 "use client"
 
 import React, { useRef, useState } from 'react'
-import { ArrowRight, ArrowUpSquare } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
+import FileSelectorNoFile from '@/components/FileSelectorNoFile'
+import FileSelectorFileSelected from '@/components/FileSelectorFileSelected'
 
 const Analyze = () => {
   const [file, setFile] = useState(null)
@@ -17,7 +19,7 @@ const Analyze = () => {
     event.preventDefault()
 
     const selectedFile = event.target.files[0]
-    if (selectedFile && (selectedFile.name.endsWith(".pdf") || selectedFile.name.endsWith(".docx"))) {
+    if (selectedFile && (selectedFile.name.toLowerCase().endsWith(".pdf") || selectedFile.name.toLowerCase().endsWith(".docx"))) {
       setFile(selectedFile)
     }
   }
@@ -41,14 +43,14 @@ const Analyze = () => {
 
     const droppedFile = event.dataTransfer.files[0]
 
-    if (droppedFile && (droppedFile.name.endsWith(".pdf") || droppedFile.name.endsWith(".docx"))) {
+    if (droppedFile && (droppedFile.name.toLowerCase().endsWith(".pdf") || droppedFile.name.toLowerCase().endsWith(".docx"))) {
       setFile(droppedFile)
     }
   }
 
   return (
     <section className="min-h-[80dvh] w-full flex justify-center items-center">
-      <div className="min-w-[35%] flex flex-col justify-center items-start gap-10">
+      <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-10">
         <p className="text-xs text-secondary font-medium uppercase tracking-widest flex items-center gap-2">
           <span className="inline-block w-5 h-px bg-secondary" />
           Step 1
@@ -60,17 +62,12 @@ const Analyze = () => {
           <p className="text-lg text-secondary">PDF or DOCX. We&apos;ll do the rest.</p>
         </div>
 
-        <div className="w-full flex flex-col justify-center items-center border-[1.5px] border-dashed border-secondary rounded-2xl p-16 cursor-pointer gap-1.5" onClick={handleFileSelectClick} onDragOver={handleFileDragOver} onDragLeave={handleFileDragLeave} onDrop={handleFileDrop}>
+        <div className={`w-full flex flex-col justify-center items-center border-[1.5px] border-dashed border-secondary hover:bg-black/2.5 ${dragOver ? "bg-black/2.5" : ""} rounded-2xl p-16 cursor-pointer transition-colors duration-200 gap-1.5`} onClick={handleFileSelectClick} onDragOver={handleFileDragOver} onDragLeave={handleFileDragLeave} onDrop={handleFileDrop}>
           <input ref={inputFileRef} type="file" accept='.pdf, .docx' className="hidden" onChange={handleFileSelect} />
 
-          <ArrowUpSquare strokeWidth={1} size={36} className='text-secondary' />
+          {!file && <FileSelectorNoFile />}
 
-          <p className="text-center text-sm text-secondary font-light leading-relaxed tracking-wide mt-4">
-            <span className="font-medium text-primary">Click to upload </span>
-            or drag and drop
-          </p>
-
-          <p className="text-xs text-secondary">PDF · DOCX</p>
+          {file && <FileSelectorFileSelected filename={file.name} />}
         </div>
 
         <div className="flex justify-start items-center gap-3">
