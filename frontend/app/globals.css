@@ -20,3 +20,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .hide-scrollbar-track {
+    /* Standard Firefox/Chrome hide by default */
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) transparent;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--secondary);
+      border-radius: 9999px;
+      /* This creates the "gap" at the top and bottom */
+      border: 4px solid transparent;
+      background-clip: padding-box;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--primary);
+    }
+  }
+}
