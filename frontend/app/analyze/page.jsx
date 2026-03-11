@@ -31,7 +31,7 @@ const scoreLabel = (score) => {
 const Analyze = () => {
   const [file, setFile] = useState(null)
   const [dragOver, setDragOver] = useState(false)
-  const [jobDescriptionText, setJobDescriptionText] = useState(null)
+  const [jobDescriptionText, setJobDescriptionText] = useState("")
   const [_result, _setResult] = useState({
     "success": true,
     "overall_score": {
@@ -168,11 +168,25 @@ const Analyze = () => {
   }
 
   const reset = () => {
-    setStep("upload");
+    setStep("fileUpload");
     setFile(null);
     setJobDescriptionText("");
-    setResult(null);
-    setError(null);
+    setResult({
+      "success": true,
+      "overall_score": {
+        "score": 0,
+        "interpretation": ""
+      },
+      "score_breakdown": {
+        "impact_metrics": 0,
+        "jd_alignment": 0,
+        "ownership_signals": 0,
+        "remote_readiness": 0
+      },
+      "recruiter_risks": [],
+      "strengths": [],
+      "top_fixes": []
+    });
   };
 
   const circumference = 2 * Math.PI * 46;
