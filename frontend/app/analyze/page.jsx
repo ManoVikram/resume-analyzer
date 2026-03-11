@@ -208,6 +208,7 @@ const Analyze = () => {
 
           <h2 className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Here&apos;s your scorecard.</h2>
 
+          {/* Score breakdown */}
           <div className="w-full flex flex-col items-center gap-6 mb-10 sm:flex-row sm:items-start sm:gap-10 sm:mb-12">
             {/* Ring */}
             <div className="flex flex-col items-center gap-2 shrink-0">
@@ -247,6 +248,24 @@ const Analyze = () => {
                   <span className="text-base sm:text-lg font-dm-serif-display" style={{ color: scoreHex(item.value) }}>
                     {item.value}
                   </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Recruiter risks */}
+          <div className="w-full mb-8">
+            <div className="flex justify-start items-center gap-3 mb-8">
+              <p className="text-xs font-medium tracking-widest uppercase text-secondary">7-second recruiter scan</p>
+
+              <span className="inline-block flex-1 h-px bg-secondary" />
+            </div>
+
+            <div className="flex flex-col justify-start items-start gap-2">
+              {result.recruiter_risks.map((risk, index) => (
+                <div key={index} className="flex justify-start items-start text-sm font-light text-primary leading-relaxed gap-2.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0" />
+                  {risk}
                 </div>
               ))}
             </div>
