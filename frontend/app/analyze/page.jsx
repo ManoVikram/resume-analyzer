@@ -4,11 +4,13 @@ import React, { useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import FileSelectorNoFile from '@/components/FileSelectorNoFile'
 import FileSelectorFileSelected from '@/components/FileSelectorFileSelected'
+import Lottie from 'lottie-react'
+import searchingAnimation from '@/public/SearchingLottie.json'
 
 const Analyze = () => {
   const [file, setFile] = useState(null)
   const [dragOver, setDragOver] = useState(false)
-  const [step, setStep] = useState("jobDescription")  // fileUpload | jobDescription | loading | analysis
+  const [step, setStep] = useState("loading")  // fileUpload | jobDescription | loading | analysis
 
   const inputFileRef = useRef(null)
 
@@ -60,7 +62,7 @@ const Analyze = () => {
           </p>
 
           <div className="flex flex-col justify-start items-start -mt-6 gap-2">
-            <p className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Drop your resume.</p>
+            <h2 className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Drop your resume.</h2>
 
             <p className="text-lg text-secondary">PDF or DOCX. We&apos;ll do the rest.</p>
           </div>
@@ -92,7 +94,7 @@ const Analyze = () => {
           </p>
 
           <div className="flex flex-col justify-start items-start -mt-6 gap-2">
-            <p className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Paste the job description.</p>
+            <h2 className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Paste the job description.</h2>
 
             <p className="text-lg text-secondary">Copy the full JD - the more detail, the sharper the analysis.</p>
           </div>
@@ -111,6 +113,25 @@ const Analyze = () => {
 
               <p className="text-sm text-secondary group-hover:text-primary">Back</p>
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Loading */}
+      {step === "loading" && (
+        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-center gap-10">
+          <Lottie animationData={searchingAnimation} className='w-fit' loop autoplay />
+
+          <div className="flex flex-col justify-start items-start -mt-6 gap-2">
+            <h4 className="font-dm-serif-display text-3xl md:text-4xl text-primary leading-tight tracking-tight">Analyzing your resume</h4>
+
+            <p className="text-sm md:text-base text-secondary">Cross-referencing with the job description</p>
+          </div>
+
+          <div className="flex justify-center gap-1">
+            {[0, 1, 2].map((i) => (
+              <span key={i} className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse ease-in-out" style={{ animationDelay: `${i * 0.2}s`, animationDuration: "1.5s" }} />
+            ))}
           </div>
         </div>
       )}
