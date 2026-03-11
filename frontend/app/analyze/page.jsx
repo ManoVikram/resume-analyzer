@@ -51,6 +51,29 @@ const Analyze = () => {
 
   const inputFileRef = useRef(null)
 
+  const scoreBreakdown = [
+    {
+      label: "Impact & Metrics",
+      value: result.score_breakdown.impact_metrics,
+      weight: "30%"
+    },
+    {
+      label: "JD Alignment",
+      value: result.score_breakdown.jd_alignment,
+      weight: "30%"
+    },
+    {
+      label: "Ownership",
+      value: result.score_breakdown.ownership_signals,
+      weight: "20%"
+    },
+    {
+      label: "Remote Ready",
+      value: result.score_breakdown.remote_readiness,
+      weight: "20%"
+    }
+  ]
+
   const handleFileSelectClick = () => {
     inputFileRef.current.click()
   }
@@ -185,10 +208,10 @@ const Analyze = () => {
 
           <h2 className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Here&apos;s your scorecard.</h2>
 
-          <div className="flex flex-col items-center gap-6 mb-10 sm:flex-row sm:items-start sm:gap-8 sm:mb-12">
+          <div className="w-full flex flex-col items-center gap-6 mb-10 sm:flex-row sm:items-start sm:gap-10 sm:mb-12">
             {/* Ring */}
             <div className="flex flex-col items-center gap-2 shrink-0">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28">
+              <div className="relative w-28 h-3w-28 md:w-36 md:h-36">
                 <svg viewBox="0 0 110 110" className="w-full h-full -rotate-90">
                   <circle cx="55" cy="55" r="46" fill="none" stroke="#ede9e0" strokeWidth="8" />
 
@@ -200,13 +223,32 @@ const Analyze = () => {
                     {result.overall_score.score}
                   </strong>
 
-                  <span className="text-[10px] text-secondary font-light">/ 100</span>
+                  <span className="text-xs text-secondary font-light">/ 100</span>
                 </div>
               </div>
 
               <p className={`text-xs font-medium text-center max-w-24 sm:max-w-28 leading-snug ${scoreColor(result.overall_score.score)}`}>
                 {scoreLabel(result.overall_score.score)}
               </p>
+            </div>
+
+            {/* Breakdown */}
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1">
+              {scoreBreakdown.map((item) => (
+                <div key={item.label} className="bg-white border border-secondary/20 rounded-xl p-3">
+                  <p className="text-xs font-medium tracking-wide uppercase text-secondary mb-2">
+                    {item.label}
+                  </p>
+
+                  <div className="h-1 bg-background rounded-full overflow-hidden mb-1.5">
+                    <div className="h-full rounded-full transition-all duration-700" style={{ width: `${item.value}%`, background: scoreHex(item.value) }} />
+                  </div>
+
+                  <span className="text-base sm:text-lg font-dm-serif-display" style={{ color: scoreHex(item.value) }}>
+                    {item.value}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
