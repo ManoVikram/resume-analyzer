@@ -1,16 +1,53 @@
 "use client"
 
-import React, { useRef, useState } from 'react'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
-import FileSelectorNoFile from '@/components/FileSelectorNoFile'
 import FileSelectorFileSelected from '@/components/FileSelectorFileSelected'
-import Lottie from 'lottie-react'
+import FileSelectorNoFile from '@/components/FileSelectorNoFile'
 import searchingAnimation from '@/public/SearchingLottie.json'
+import Lottie from 'lottie-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { useRef, useState } from 'react'
+
+const scoreColor = (score) => {
+  if (score >= 80) return "text-green-600";
+  if (score >= 65) return "text-yellow-600";
+  if (score >= 50) return "text-orange-500";
+  return "text-red-600";
+};
+
+const scoreHex = (score) => {
+  if (score >= 80) return "#16a34a";
+  if (score >= 65) return "#ca8a04";
+  if (score >= 50) return "#ea580c";
+  return "#dc2626";
+};
+
+const scoreLabel = (score) => {
+  if (score >= 80) return "Strong shortlist potential";
+  if (score >= 65) return "Competitive but risky";
+  if (score >= 50) return "Likely rejected";
+  return "Major alignment gaps";
+};
 
 const Analyze = () => {
   const [file, setFile] = useState(null)
   const [dragOver, setDragOver] = useState(false)
-  const [step, setStep] = useState("loading")  // fileUpload | jobDescription | loading | analysis
+  const [result, setResult] = useState({
+    "success": true,
+    "overall_score": {
+      "score": 0,
+      "interpretation": ""
+    },
+    "score_breakdown": {
+      "impact_metrics": 0,
+      "jd_alignment": 0,
+      "ownership_signals": 0,
+      "remote_readiness": 0
+    },
+    "recruiter_risks": [],
+    "strengths": [],
+    "top_fixes": []
+  })
+  const [step, setStep] = useState("analysis")  // fileUpload | jobDescription | loading | analysis
 
   const inputFileRef = useRef(null)
 
@@ -50,6 +87,8 @@ const Analyze = () => {
       setFile(droppedFile)
     }
   }
+
+  const circumference = 2 * Math.PI * 46;
 
   return (
     <section className="min-h-dvh w-full flex justify-center items-center">
@@ -132,6 +171,43 @@ const Analyze = () => {
             {[0, 1, 2].map((i) => (
               <span key={i} className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse ease-in-out" style={{ animationDelay: `${i * 0.2}s`, animationDuration: "1.5s" }} />
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Analysis */}
+      {step === "analysis" && result && (
+        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-6">
+          <p className="text-xs text-secondary font-medium uppercase tracking-widest flex items-center gap-2">
+            <span className="inline-block w-5 h-px bg-secondary" />
+            Analysis complete
+          </p>
+
+          <h2 className="font-dm-serif-display text-4xl md:text-5xl text-primary leading-tight tracking-tight">Here&apos;s your scorecard.</h2>
+
+          <div className="flex flex-col items-center gap-6 mb-10 sm:flex-row sm:items-start sm:gap-8 sm:mb-12">
+            {/* Ring */}
+            <div className="flex flex-col items-center gap-2 shrink-0">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28">
+                <svg viewBox="0 0 110 110" className="w-full h-full -rotate-90">
+                  <circle cx="55" cy="55" r="46" fill="none" stroke="#ede9e0" strokeWidth="8" />
+
+                  <circle cx="55" cy="55" r="46" fill="none" stroke={scoreHex(result.overall_score.score)} strokeWidth="8" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - result.overall_score.score / 100)} className="transition-[stroke-dashoffset] duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" />
+                </svg>
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <strong className={`text-2xl sm:text-3xl leading-none font-dm-serif-display ${scoreColor(result.overall_score.score)}`}>
+                    {result.overall_score.score}
+                  </strong>
+
+                  <span className="text-[10px] text-secondary font-light">/ 100</span>
+                </div>
+              </div>
+
+              <p className={`text-xs font-medium text-center max-w-24 sm:max-w-28 leading-snug ${scoreColor(result.overall_score.score)}`}>
+                {scoreLabel(result.overall_score.score)}
+              </p>
+            </div>
           </div>
         </div>
       )}
