@@ -2,6 +2,7 @@
 
 import FileSelectorFileSelected from '@/components/FileSelectorFileSelected'
 import FileSelectorNoFile from '@/components/FileSelectorNoFile'
+import { analyzeResume } from '@/lib/api/helpers'
 import searchingAnimation from '@/public/SearchingLottie.json'
 import Lottie from 'lottie-react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
@@ -32,7 +33,7 @@ const Analyze = () => {
   const [file, setFile] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [jobDescriptionText, setJobDescriptionText] = useState("")
-  const [_result, _setResult] = useState({
+  const [result, setResult] = useState({
     "success": true,
     "overall_score": {
       "score": 0,
@@ -48,62 +49,8 @@ const Analyze = () => {
     "strengths": [],
     "top_fixes": []
   })
-  const [result, setResult] = useState({
-    "success": true,
-    "overall_score": {
-      "score": 42,
-      "interpretation": "Major alignment gaps"
-    },
-    "score_breakdown": {
-      "impact_metrics": 35,
-      "jd_alignment": 38,
-      "ownership_signals": 52,
-      "remote_readiness": 48
-    },
-    "recruiter_risks": [
-      "No JavaScript, TypeScript, or React experience listed despite role requiring strong JS/TS/React proficiency",
-      "Resume lacks any frontend web development projects or work experience; Flutter and GoLang focus misaligned with web stack",
-      "Only 6 months of professional experience (intern) falls short of 'professional experience in frontend development' requirement",
-      "No evidence of technical writing, specification creation, or evaluation rubric development skills",
-      "Vague achievement descriptions (Applause Awards) without quantifiable impact or business metrics",
-      "Missing portfolio depth - only 2 projects listed with minimal technical detail or outcomes"
-    ],
-    "strengths": [
-      "Full-stack capability demonstrated with multiple backend languages (GoLang, Python) and cloud platforms (AWS, GCP)",
-      "Recent graduate with strong educational foundation (MCA from VIT, BSc from PSG)",
-      "Currently employed as Analyst at Deloitte showing career progression from internship",
-      "Bilingual/multilingual proficiency demonstrates communication skills valuable for async collaboration",
-      "Proactive in building projects (Memelab shows AI/ML integration capability)"
-    ],
-    "top_fixes": [
-      {
-        "problem": "No JavaScript, TypeScript, or React experience despite these being core job requirements",
-        "why_it_matters": "Frontend web development is the primary focus of this role; without these skills, you cannot perform the core responsibilities of writing prompts and evaluation rubrics for web applications",
-        "improvement": "Build 2-3 React projects showcasing UI behavior, state management, and interactivity; add 'React, JavaScript, TypeScript' to skills section with specific proficiency levels"
-      },
-      {
-        "problem": "Resume emphasizes mobile (Flutter) and backend (GoLang, Python) rather than frontend web development",
-        "why_it_matters": "Startups hiring for this role need someone who can evaluate web UI/UX and frontend correctness; your background signals mobile/backend focus instead",
-        "improvement": "Reframe experience to highlight any web components, frontend logic, or client-side work; add NextJS project to portfolio demonstrating modern web stack knowledge"
-      },
-      {
-        "problem": "Only 6 months of professional development experience (internship) listed; job requires 'professional experience'",
-        "why_it_matters": "Remote startup roles expect independent contributors who can work autonomously; limited professional context raises questions about ability to deliver without supervision",
-        "improvement": "Expand on current Deloitte Analyst role with specific frontend projects, technical contributions, and deliverables; quantify impact (e.g., 'Improved UI performance by X%')"
-      },
-      {
-        "problem": "Achievements lack specificity and quantifiable impact; 'Applause Awards' mentioned twice without context",
-        "why_it_matters": "This role requires analytical thinking and attention to detail; vague achievements suggest inability to communicate technical impact clearly",
-        "improvement": "Replace generic awards with specific metrics: 'Reduced app load time by 40%', 'Improved user retention by 25%', or 'Shipped 5 features impacting 10K+ users'"
-      },
-      {
-        "problem": "No evidence of technical writing, specification creation, or evaluation skills mentioned in resume",
-        "why_it_matters": "Core job responsibility is creating precise evaluation rubrics and technical specifications; resume must demonstrate this capability",
-        "improvement": "Add section highlighting technical documentation experience or create portfolio examples of evaluation rubrics, test specifications, or technical design documents"
-      }
-    ]
-  })
   const [step, setStep] = useState("analysis")  // fileUpload | jobDescription | loading | analysis
+  const [error, setError] = useState(null)
 
   const inputFileRef = useRef(null)
 
@@ -188,6 +135,23 @@ const Analyze = () => {
       "top_fixes": []
     });
   };
+
+  const startAnalysis = async () => {
+    if (!file || !jobDescriptionText) return
+
+    setStep("loading")
+    setError(null)
+
+    try {
+      const analysisResult = await analyzeResume(file, jobDescriptionText)
+
+      setResult(analysisResult)
+      setStep("analysis")
+    } catch (error) {
+      setError(error.message ?? "Failed to analyze resume")
+      setStep("error")
+    }
+  }
 
   const circumference = 2 * Math.PI * 46;
 
