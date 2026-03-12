@@ -192,7 +192,7 @@ const Analyze = () => {
   const circumference = 2 * Math.PI * 46;
 
   return (
-    <section className="min-h-dvh w-full flex justify-center items-center my-24">
+    <section className="min-h-dvh w-full flex justify-center items-center py-24 bg-red-300">
       {/* File upload */}
       {step === "fileUpload" && (
         <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] min-h-[80%] flex flex-col justify-center items-start gap-10">
