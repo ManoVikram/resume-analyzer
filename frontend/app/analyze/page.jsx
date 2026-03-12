@@ -4,9 +4,10 @@ import FileSelectorFileSelected from '@/components/FileSelectorFileSelected'
 import FileSelectorNoFile from '@/components/FileSelectorNoFile'
 import { analyzeResume } from '@/lib/api/helpers'
 import searchingAnimation from '@/public/SearchingLottie.json'
+import gsap from 'gsap'
 import Lottie from 'lottie-react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 const scoreColor = (score) => {
@@ -30,28 +31,65 @@ const scoreLabel = (score) => {
   return "Major alignment gaps";
 };
 
+// Animate current step out (slide up + fade), then call onComplete to switch state
+const animateOut = (ref, onComplete) => {
+  if (!ref.current) {
+    onComplete()
+    return
+  }
+
+  gsap.to(ref.current, {
+    y: -48,
+    opacity: 0,
+    duration: 0.35,
+    ease: "power2.in",
+    onComplete,
+  })
+}
+
+// Animate new step in (slide up from below + fade in)
+const animateIn = (ref) => {
+  if (!ref.current) return
+
+  gsap.fromTo(ref.current,
+    {
+      y: 56,
+      opacity: 0
+    },
+    {
+      y: 0,
+      opacity: 1,
+      duration: 0.45,
+      ease: "power3.out"
+    }
+  )
+}
+
+const EMPTY_RESULT = {
+  "success": true,
+  "overall_score": {
+    "score": 0,
+    "interpretation": ""
+  },
+  "score_breakdown": {
+    "impact_metrics": 0,
+    "jd_alignment": 0,
+    "ownership_signals": 0,
+    "remote_readiness": 0
+  },
+  "recruiter_risks": [],
+  "strengths": [],
+  "top_fixes": []
+}
+
 const Analyze = () => {
   const [file, setFile] = useState(null)
   const [dragOver, setDragOver] = useState(false)
   const [jobDescriptionText, setJobDescriptionText] = useState("")
-  const [result, setResult] = useState({
-    "success": true,
-    "overall_score": {
-      "score": 0,
-      "interpretation": ""
-    },
-    "score_breakdown": {
-      "impact_metrics": 0,
-      "jd_alignment": 0,
-      "ownership_signals": 0,
-      "remote_readiness": 0
-    },
-    "recruiter_risks": [],
-    "strengths": [],
-    "top_fixes": []
-  })
+  const [result, setResult] = useState(EMPTY_RESULT)
   const [step, setStep] = useState("fileUpload")  // fileUpload | jobDescription | loading | analysis
 
+  const stepRef = useRef(null)
   const inputFileRef = useRef(null)
 
   const scoreBreakdown = [
@@ -77,9 +115,15 @@ const Analyze = () => {
     }
   ]
 
-  const handleFileSelectClick = () => {
-    inputFileRef.current.click()
-  }
+  const goToStep = useCallback((nextStep) => {
+    animateOut(stepRef, () => {
+      setStep(nextStep)
+      // Wait a tick for React to render the new step, then animate in
+      requestAnimationFrame(() => animateIn(stepRef))
+    })
+  }, [])
+
+  const handleFileSelectClick = () => inputFileRef.current.click()
 
   const handleFileSelect = (event) => {
     event.preventDefault()
@@ -115,51 +159,46 @@ const Analyze = () => {
   }
 
   const reset = () => {
-    setStep("fileUpload");
-    setFile(null);
-    setJobDescriptionText("");
-    setResult({
-      "success": true,
-      "overall_score": {
-        "score": 0,
-        "interpretation": ""
-      },
-      "score_breakdown": {
-        "impact_metrics": 0,
-        "jd_alignment": 0,
-        "ownership_signals": 0,
-        "remote_readiness": 0
-      },
-      "recruiter_risks": [],
-      "strengths": [],
-      "top_fixes": []
-    });
-  };
+    animateOut(stepRef, () => {
+      setStep("fileUpload")
+      setFile(null)
+      setJobDescriptionText("")
+      setResult(EMPTY_RESULT)
+      requestAnimationFrame(() => animateIn(stepRef))
+    })
+  }
 
   const startAnalysis = async () => {
     if (!file || !jobDescriptionText) return
 
-    setStep("loading")
+    animateOut(stepRef, async () => {
+      setStep("loading")
+      requestAnimationFrame(() => animateIn(stepRef))
 
-    try {
-      const analysisResult = await analyzeResume(file, jobDescriptionText)
-
-      setResult(analysisResult)
-      setStep("analysis")
-    } catch (error) {
-      toast.error("Analysis failed. Please try again.")
-
-      setStep("error")
-    }
+      try {
+        const analysisResult = await analyzeResume(file, jobDescriptionText)
+        setResult(analysisResult)
+        animateOut(stepRef, () => {
+          setStep("analysis")
+          requestAnimationFrame(() => animateIn(stepRef))
+        })
+      } catch (error) {
+        toast.error("Analysis failed. Please try again.")
+        animateOut(stepRef, () => {
+          setStep("jobDescription")
+          requestAnimationFrame(() => animateIn(stepRef))
+        })
+      }
+    })
   }
 
   const circumference = 2 * Math.PI * 46;
 
   return (
-    <section className="min-h-dvh w-full flex justify-center items-center py-24">
+    <section className="min-h-dvh w-full flex justify-center items-center py-24 overflow-hidden">
       {/* File upload */}
       {step === "fileUpload" && (
-        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] min-h-[80%] flex flex-col justify-center items-start gap-10">
+        <div ref={stepRef} className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] min-h-[80%] flex flex-col justify-center items-start gap-10">
           <p className="text-xs text-secondary font-medium uppercase tracking-widest flex items-center gap-2">
             <span className="inline-block w-5 h-px bg-secondary" />
             Step 1
@@ -180,7 +219,7 @@ const Analyze = () => {
           </div>
 
           <div className="flex justify-start items-center gap-3">
-            <button disabled={!file} className="flex justify-center items-center bg-primary text-white h-10 w-10 rounded-full p-3 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200" onClick={() => setStep("jobDescription")}>
+            <button disabled={!file} className="flex justify-center items-center bg-primary text-white h-10 w-10 rounded-full p-3 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200" onClick={() => goToStep("jobDescription")}>
               <ArrowRight className='text-white' />
             </button>
 
@@ -191,7 +230,7 @@ const Analyze = () => {
 
       {/* Job description */}
       {step === "jobDescription" && (
-        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-10">
+        <div ref={stepRef} className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-10">
           <p className="text-xs text-secondary font-medium uppercase tracking-widest flex items-center gap-2">
             <span className="inline-block w-5 h-px bg-secondary" />
             Step 2
@@ -212,7 +251,7 @@ const Analyze = () => {
               <ArrowRight className='h-4 w-4 text-white' />
             </button>
 
-            <button disabled={false} className="group flex justify-center items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-100" onClick={() => setStep("fileUpload")}>
+            <button disabled={false} className="group flex justify-center items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-100" onClick={() => goToStep("fileUpload")}>
               <ArrowLeft className='h-4 w-4 text-secondary group-hover:text-primary' />
 
               <p className="text-sm text-secondary group-hover:text-primary">Back</p>
@@ -223,7 +262,7 @@ const Analyze = () => {
 
       {/* Loading */}
       {step === "loading" && (
-        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-center gap-10">
+        <div ref={stepRef} className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-center gap-10">
           <Lottie animationData={searchingAnimation} className='w-fit' loop autoplay />
 
           <div className="flex flex-col justify-start items-start -mt-6 gap-2">
@@ -242,7 +281,7 @@ const Analyze = () => {
 
       {/* Analysis */}
       {step === "analysis" && result && (
-        <div className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-4">
+        <div ref={stepRef} className="w-full max-w-[80%] md:max-w-[70%] lg:max-w-[60%] xl:max-w-[50%] flex flex-col justify-center items-start gap-4">
           <p className="text-xs text-secondary font-medium uppercase tracking-widest flex items-center gap-2">
             <span className="inline-block w-5 h-px bg-secondary" />
             Analysis complete
