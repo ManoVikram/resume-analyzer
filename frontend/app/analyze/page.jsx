@@ -180,7 +180,7 @@ const Analyze = () => {
           </div>
 
           <div className="flex justify-start items-center gap-3">
-            <button disabled={!file} className="flex justify-center items-center bg-primary text-white h-10 w-10 rounded-full p-3 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200">
+            <button disabled={!file} className="flex justify-center items-center bg-primary text-white h-10 w-10 rounded-full p-3 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200" onClick={() => setStep("jobDescription")}>
               <ArrowRight className='text-white' />
             </button>
 
@@ -203,16 +203,16 @@ const Analyze = () => {
             <p className="text-lg text-secondary">Copy the full JD - the more detail, the sharper the analysis.</p>
           </div>
 
-          <textarea placeholder='Paste the description here...' className='w-full bg-white min-h-48 md:min-h-64 resize-none rounded-2xl p-4 md:p-6 text-sm border border-gray-300 focus:border-secondary outline-none transition-colors duration-200 hide-scrollbar-track overflow-y-auto' />
+          <textarea placeholder='Paste the description here...' className='w-full bg-white min-h-48 md:min-h-64 resize-none rounded-2xl p-4 md:p-6 text-sm border border-gray-300 focus:border-secondary outline-none transition-colors duration-200 hide-scrollbar-track overflow-y-auto' onChange={(event) => setJobDescriptionText(event.target.value)} />
 
           <div className="flex justify-start items-center gap-4">
-            <button disabled={false} className="flex justify-center items-center bg-primary text-white rounded-full px-8 py-4 gap-2 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200">
+            <button disabled={false} className="flex justify-center items-center bg-primary text-white rounded-full px-8 py-4 gap-2 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200" onClick={startAnalysis}>
               <p className="text-sm font-semibold">Analyze</p>
 
               <ArrowRight className='h-4 w-4 text-white' />
             </button>
 
-            <button disabled={false} className="group flex justify-center items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-100">
+            <button disabled={false} className="group flex justify-center items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-100" onClick={() => setStep("fileUpload")}>
               <ArrowLeft className='h-4 w-4 text-secondary group-hover:text-primary' />
 
               <p className="text-sm text-secondary group-hover:text-primary">Back</p>

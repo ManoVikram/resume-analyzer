@@ -1,6 +1,6 @@
 "use server"
 
-const API_BASE_URL = `${process.env.HTTP_HOST}:${process.env.HTTP_PORT}` ?? "http://localhost:8080";
+const API_BASE_URL = `${process.env.HTTP_HOST}:${process.env.HTTP_PORT}`
 
 export async function analyzeResume(file, jobDescription) {
     // Step 1 - Create FormData and append file and job description
