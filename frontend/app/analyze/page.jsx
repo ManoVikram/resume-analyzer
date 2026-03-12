@@ -7,6 +7,7 @@ import searchingAnimation from '@/public/SearchingLottie.json'
 import Lottie from 'lottie-react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { toast } from 'sonner'
 
 const scoreColor = (score) => {
   if (score >= 80) return "text-green-600";
@@ -50,7 +51,6 @@ const Analyze = () => {
     "top_fixes": []
   })
   const [step, setStep] = useState("fileUpload")  // fileUpload | jobDescription | loading | analysis
-  const [error, setError] = useState(null)
 
   const inputFileRef = useRef(null)
 
@@ -140,7 +140,6 @@ const Analyze = () => {
     if (!file || !jobDescriptionText) return
 
     setStep("loading")
-    setError(null)
 
     try {
       const analysisResult = await analyzeResume(file, jobDescriptionText)
@@ -148,7 +147,8 @@ const Analyze = () => {
       setResult(analysisResult)
       setStep("analysis")
     } catch (error) {
-      setError(error.message ?? "Failed to analyze resume")
+      toast.error("Analysis failed. Please try again.")
+
       setStep("error")
     }
   }
