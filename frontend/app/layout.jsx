@@ -1,5 +1,8 @@
 import "./globals.css";
-import { DM_Serif_Display } from "next/font/google";
+import { DM_Serif_Display, Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const dmSerifDisplay = DM_Serif_Display({
   subsets: ["latin"],
@@ -15,7 +18,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={`${dmSerifDisplay.variable} antialiased`}>
         <main className="px-6 md:px-12">
           {children}

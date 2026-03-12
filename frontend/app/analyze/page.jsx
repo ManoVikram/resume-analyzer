@@ -49,7 +49,7 @@ const Analyze = () => {
     "strengths": [],
     "top_fixes": []
   })
-  const [step, setStep] = useState("analysis")  // fileUpload | jobDescription | loading | analysis
+  const [step, setStep] = useState("fileUpload")  // fileUpload | jobDescription | loading | analysis
   const [error, setError] = useState(null)
 
   const inputFileRef = useRef(null)
