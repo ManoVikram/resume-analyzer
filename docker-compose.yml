@@ -1,0 +1,40 @@
+services:
+
+  # Python gRPC AI service
+  ai:
+    build:
+      context: ./backend/services
+      dockerfile: ../../infra/ai/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - GRPC_HOST=[::]
+      - GRPC_PORT=50051
+    ports:
+      - "50051:50051"
+    networks:
+      - internal
+
+  # Go Gin HTTP API
+  api:
+    build:
+      context: ./backend/api
+      dockerfile: ../../infra/api/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - GRPC_HOST=ai # resolves to ai service inside Docker network
+      - GRPC_PORT=50051
+      - HTTP_HOST=0.0.0.0
+      - HTTP_PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ai
+    networks:
+      - internal
+      - external
+
+networks:
+  internal: # ai <-> api only (gRPC)
+  external: # api exposed to host machine (HTTP)
