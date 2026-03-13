@@ -55,10 +55,13 @@ func main() {
 	// Step 4 - Add CORS middleware
 	server.Use(corsMiddleware())
 
-	// Step 5 - Register routes
+	// Step 5 - Set not to trust any proxy servers
+	server.SetTrustedProxies(nil)
+
+	// Step 6 - Register routes
 	routes.RegisterRoutes(server, grpcClient)
 
-	// Step 6 - Start the Gin HTTP server
+	// Step 7 - Start the Gin HTTP server
 	log.Printf("🚀 Server running on %s:%s", httpHost, httpPort)
 	log.Fatal(server.Run(":" + httpPort))
 }
