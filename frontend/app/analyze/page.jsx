@@ -210,7 +210,7 @@ const Analyze = () => {
             <p className="text-lg text-secondary">PDF or DOCX. We&apos;ll do the rest.</p>
           </div>
 
-          <div className={`w-full flex flex-col justify-center items-center border-[1.5px] border-dashed border-secondary hover:bg-black/2.5 ${dragOver ? "bg-black/2.5" : ""} rounded-2xl p-16 cursor-pointer transition-colors duration-200 gap-1.5`} onClick={handleFileSelectClick} onDragOver={handleFileDragOver} onDragLeave={handleFileDragLeave} onDrop={handleFileDrop}>
+          <div className={`w-full flex flex-col justify-center items-center border-[1.5px] border-dashed border-secondary hover:bg-black/2.5 ${dragOver ? "bg-black/2.5" : ""} rounded-2xl p-8 md:p-16 cursor-pointer transition-colors duration-200 gap-1.5`} onClick={handleFileSelectClick} onDragOver={handleFileDragOver} onDragLeave={handleFileDragLeave} onDrop={handleFileDrop}>
             <input ref={inputFileRef} type="file" accept='.pdf, .docx' className="hidden" onChange={handleFileSelect} />
 
             {!file && <FileSelectorNoFile />}
@@ -242,7 +242,7 @@ const Analyze = () => {
             <p className="text-lg text-secondary">Copy the full JD - the more detail, the sharper the analysis.</p>
           </div>
 
-          <textarea placeholder='Paste the description here...' className='w-full bg-white min-h-48 md:min-h-64 resize-none rounded-2xl p-4 md:p-6 text-sm border border-gray-300 focus:border-secondary outline-none transition-colors duration-200 hide-scrollbar-track overflow-y-auto' onChange={(event) => setJobDescriptionText(event.target.value)} />
+          <textarea placeholder='Paste the description here...' className='w-full bg-white min-h-40 md:min-h-64 resize-none rounded-2xl p-4 md:p-6 text-sm border border-gray-300 focus:border-secondary outline-none transition-colors duration-200 hide-scrollbar-track overflow-y-auto' onChange={(event) => setJobDescriptionText(event.target.value)} />
 
           <div className="flex justify-start items-center gap-4">
             <button disabled={false} className="flex justify-center items-center bg-primary text-white rounded-full px-8 py-4 gap-2 cursor-pointer disabled:bg-secondary disabled:cursor-not-allowed disabled:hover:scale-100 hover:scale-105 transition-transform duration-200" onClick={startAnalysis}>
