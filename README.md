@@ -67,3 +67,14 @@ python3 server.py
 ```bash
 go run .
 ```
+
+## Create the Next.js project
+
+```bash
+```
+
+Create a symlink to .env file inside /frontend folder
+
+```bash
+ln -s ../.env .env.local
+```
