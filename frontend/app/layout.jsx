@@ -1,7 +1,8 @@
 import "./globals.css";
 import { DM_Serif_Display, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/shared/Navbar";
+import { Toaster } from "@/components/ui/sonner";
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -26,6 +27,8 @@ export default function RootLayout({ children }) {
         <main className="px-6 md:px-12">
           {children}
         </main>
+
+        <Toaster richColors />
       </body>
     </html>
   );
