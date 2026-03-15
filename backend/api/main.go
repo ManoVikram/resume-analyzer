@@ -1,10 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
 	"github.com/ManoVikram/resume-analyzer/backend/api/client"
+	"github.com/ManoVikram/resume-analyzer/backend/api/middleware"
 	"github.com/ManoVikram/resume-analyzer/backend/api/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -49,19 +51,26 @@ func main() {
 	defer connection.Close()
 	log.Printf("✅ Successfully connected to gRPC service at %s:%s", grpcHost, grpcPort)
 
-	// Step 3 - Initialize and set up the Gin HTTP server
+	// Step 3 - Initialize JWKS cache for JWT verification
+	ctx := context.Background()
+	if err := middleware.InitJWKS(ctx); err != nil {
+		log.Fatalf("❌ Failed to initialize JWKS: %v", err.Error())
+	}
+	log.Println("✅ JWKS cache initialized")
+
+	// Step 4 - Initialize and set up the Gin HTTP server
 	server := gin.Default()
 
-	// Step 4 - Add CORS middleware
+	// Step 5 - Add CORS middleware
 	server.Use(corsMiddleware())
 
-	// Step 5 - Set not to trust any proxy servers
+	// Step 6 - Set not to trust any proxy servers
 	server.SetTrustedProxies(nil)
 
-	// Step 6 - Register routes
+	// Step 7 - Register routes
 	routes.RegisterRoutes(server, grpcClient)
 
-	// Step 7 - Start the Gin HTTP server
+	// Step 8 - Start the Gin HTTP server
 	log.Printf("🚀 Server running on %s:%s", httpHost, httpPort)
 	log.Fatal(server.Run(":" + httpPort))
 }
