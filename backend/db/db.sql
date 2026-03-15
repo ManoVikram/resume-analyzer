@@ -24,3 +24,22 @@ alter table public.credits enable row level security;
 create policy "Users can view own credits"
   on public.credits for select
   using (auth.uid() = user_id);
+
+  -- Function that runs on every new user signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email)
+  values (new.id, new.email);
+
+  insert into public.credits (user_id, balance)
+  values (new.id, 0);
+
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Trigger that fires the function after every new user in auth.users
+create or replace trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
